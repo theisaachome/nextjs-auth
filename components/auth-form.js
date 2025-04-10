@@ -3,8 +3,8 @@ import { signup } from '@/actions/auth-actions';
 import Link from 'next/link';
 import { useFormState } from 'react-dom';
 
+export default function AuthForm({mode}) {
 
-export default function AuthForm() {
   const [formState,formAction]=useFormState(signup,{});
 
   return (
@@ -20,27 +20,30 @@ export default function AuthForm() {
         <label htmlFor="password">Password</label>
         <input type="password" name="password" id="password" />
       </p>
-      {        formState.errors && (
-        <ul id='form-errors'>
+      {formState.errors && (
+        <ul id="form-errors">
           {Object.keys(formState.errors).map((error, index) => (
-            <li key={index}>
-              {formState.errors[error]}
-            </li>
+            <li key={index}>{formState.errors[error]}</li>
           ))}
         </ul>
       )}
-      {        formState.success && (
+      {formState.success && (
         <p>
           <span>{formState.success}</span>
         </p>
       )}
       <p>
         <button type="submit">
-          Create Account
+          {mode === "login" ? "Login" : "Create Account"}
         </button>
       </p>
       <p>
-        <Link href="/">Login with existing account.</Link>
+        {mode === "login" && (
+          <Link href="/?mode=signup">Create new account.</Link>
+        )}
+        {mode === "signup" && (
+          <Link href="/?mode=login">Login with existing account.</Link>
+        )}
       </p>
     </form>
   );
